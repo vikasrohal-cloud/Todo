@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
+
+</head>
+
+<body>
+    <div style="margin-top: 50px;" class="ui container">
+        <h1 class="ui center aligned header"><b>To Do List<b></h1>
+
+        <form class="ui form" action="/add" method="post">
+            <div class="field">
+                <label class="label">ADD EVENTS </label>
+                <input class="input" type="text" name="title" placeholder="Enter Todo..."><br>
+            </div>
+            <button class="Add" type="submit">Add</button>
+        </form>
+
+        <hr>
+
+        {% for todo in todo_list %}
+        <div class="ui segment">
+            <p class="inputHeader"><span class="spanID">{{todo.id }} </span>|| <span class="spanTitle">{{ todo.title }}</span></p>
+
+            {% if todo.complete == False %}
+            <span class="ui gray label">Not Complete</span>
+            {% else %}
+            <span class="ui green label">Completed</span>
+            {% endif %}
+            <!--<button class="updateButton" href="/update/{{ todo.id }}">Update</button>
+            <button class="updateButton" href="/delete/{{ todo.id }}" type="submit">Delete</button> -->
+
+            <a class="updateButton" href="/update/{{ todo.id }}">Update</a>
+            <a class="redButton" href="/delete/{{ todo.id }}">Delete</a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <script>
+        // Assuming you have jQuery included in your HTML for easier DOM manipulation
+    $(document).ready(function () {
+    // Toggle completion status when clicking on a task's label
+    $('.task-label').click(function () {
+        var taskId = $(this).data('task-id');
+        $.get('/update/' + taskId, function (data) {
+            location.reload(); // Refresh the page after updating
+        });
+    });
+
+    // Delete a task when clicking on the delete button
+    $('.delete-button').click(function () {
+        var taskId = $(this).data('task-id');
+        $.get('/delete/' + taskId, function (data) {
+            location.reload(); // Refresh the page after deleting
+        });
+    });
+});
+
+    </script>
+</body>
+
+</html>
